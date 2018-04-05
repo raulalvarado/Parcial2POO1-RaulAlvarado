@@ -5,8 +5,6 @@
  */
 package com.sv.udb.modelos;
 
-import java.util.ArrayList;
-import java.util.List;
 /**
  *
  * @author Estudiante
@@ -14,15 +12,15 @@ import java.util.List;
 public class bodega {
     
     private int codibode;
-    private piezas codipiez;
-    private proveedores codiprov;
+    private piezas pieza;
+    private proveedores proveedor;
     private int cant;
     private String date;
 
-    public bodega(int codibode, piezas codipiez, proveedores codiprov, int cant, String date) {
+    public bodega(int codibode, piezas pieza, proveedores proveedor, int cant, String date) {
         this.codibode = codibode;
-        this.codipiez = codipiez;
-        this.codiprov = codiprov;
+        this.pieza = pieza;
+        this.proveedor = proveedor;
         this.cant = cant;
         this.date = date;
     }
@@ -35,20 +33,20 @@ public class bodega {
         this.codibode = codibode;
     }
 
-    public piezas getCodipiez() {
-        return codipiez;
+    public piezas getPieza() {
+        return pieza;
     }
 
-    public void setCodipiez(piezas codipiez) {
-        this.codipiez = codipiez;
+    public void setPieza(piezas pieza) {
+        this.pieza = pieza;
     }
 
-    public proveedores getCodiprov() {
-        return codiprov;
+    public proveedores getProveedor() {
+        return proveedor;
     }
 
-    public void setCodiprov(proveedores codiprov) {
-        this.codiprov = codiprov;
+    public void setProveedor(proveedores proveedor) {
+        this.proveedor = proveedor;
     }
 
     public int getCant() {
@@ -67,10 +65,7 @@ public class bodega {
         this.date = date;
     }
 
-    @Override
-    public String toString() {
-        return codibode + ", codipiez=" + codipiez + ", codiprov=" + codiprov + ", cant=" + cant + ", date=" + date + '}';
-    }
+   
 
     
     

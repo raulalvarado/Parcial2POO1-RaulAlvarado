@@ -8,6 +8,7 @@ package com.sv.udb.vistas;
 import com.sv.udb.modelos.piezas;
 import com.sv.udb.modelos.proveedores;
 import com.sv.udb.modelos.bodega;
+import com.sv.udb.recursos.conexion;
 import com.sv.udb.controladores.controlPiezas;
 import com.sv.udb.controladores.controlProveedores;
 import com.sv.udb.controladores.controlBodega;
@@ -17,6 +18,23 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UIManager;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
+import net.sf.jasperreports.engine.data.JRMapArrayDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 
 /**
  *
@@ -30,8 +48,20 @@ public class Principal extends javax.swing.JFrame {
     public Principal() {
         initComponents();
         refresh();
-        refreshPiezCmb();
-        refreshProvCmb();
+        
+         DefaultComboBoxModel cmbModel = (DefaultComboBoxModel) cmbPieza.getModel();
+        cmbModel.removeAllElements();
+        
+        for (piezas piece : new controlPiezas().selectPiezas()) {
+            cmbModel.addElement(piece);
+        }
+        
+        cmbModel = (DefaultComboBoxModel) cmbProv.getModel();
+        cmbModel.removeAllElements();
+        
+        for (proveedores provider : new controlProveedores().selectProveedores()) {
+            cmbModel.addElement(provider);
+        }
     }
 
     /**
@@ -57,6 +87,13 @@ public class Principal extends javax.swing.JFrame {
         btnInsertar = new javax.swing.JButton();
         btnModi = new javax.swing.JButton();
         btnElim = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        txtHasta = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txtDesde = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -104,14 +141,78 @@ public class Principal extends javax.swing.JFrame {
         });
 
         btnElim.setText("Eliminar");
+        btnElim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnElimActionPerformed(evt);
+            }
+        });
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jButton1.setText("General");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Desde:");
+
+        jLabel7.setText("Hasta:");
+
+        jButton2.setText("Por fechas");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,15 +226,16 @@ public class Principal extends javax.swing.JFrame {
                             .addComponent(cmbPieza, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmbProv, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(btnInsertar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnModi)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnElim))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -166,8 +268,10 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnInsertar)
                             .addComponent(btnModi)
-                            .addComponent(btnElim))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnElim))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         pack();
@@ -182,7 +286,7 @@ public class Principal extends javax.swing.JFrame {
                 model.removeRow(0);
             }
             for (bodega bd : new controlBodega().consTodo()) {
-                model.addRow(new Object[]{bd.getCodipiez(),bd.getCodiprov(),bd.getCant(),bd.getDate()});
+                model.addRow(new Object[]{bd.getPieza(),bd.getProveedor(),bd.getCant(),bd.getDate()});
             }
 
         } catch (Exception e) {
@@ -190,7 +294,7 @@ public class Principal extends javax.swing.JFrame {
         }
     }
     
-    private void refreshPiezCmb()
+   /* private void refreshPiezCmb()
     {
         try
         {
@@ -222,30 +326,28 @@ public class Principal extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(this, "Error al llenar ComboBox de piezas: " + e.getMessage());
         }
-    }
+    }*/
     private void tblBodMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBodMouseClicked
         // TODO add your handling code here:
-        // TODO add your handling code here:
-         int row = tblBod.getSelectedRow();
-         
-        /*if (row >= 0) {
-            bodega bd = (bodega) tblBod.getValueAt(row, 0);
+        int row = tblBod.getSelectedRow();
+        if (row >= 0){
+            bodega bd = (bodega)tblBod.getValueAt(row, 0);
             idBod = bd.getCodibode();
-            txtNombJug.setText(jug.getNomb());
-            cmbEquipos.setEditable(true);
-            cmbEquipos.setSelectedItem(jug.getCodigoEqui());
-            cmbEquipos.setEditable(false);
+            cmbPieza.setEditable(true);
+            cmbPieza.setSelectedItem(bd.getPieza());
+            cmbPieza.setEditable(false);
+            cmbProv.setEditable(true);
+            cmbProv.setSelectedItem(bd.getProveedor());
+            cmbProv.setEditable(false);
+            txtCantidad.setText(String.valueOf(bd.getCant()));
             
-            btnGuardarJug.setEnabled(false);
-            btnActualizarJug.setEnabled(true);
-            btnEliminarJug.setEnabled(true);
-        }*/
+        }
     }//GEN-LAST:event_tblBodMouseClicked
 
     private void btnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarActionPerformed
         // TODO add your handling code here:
         try {
-            if (new controlBodega().guardar((piezas) this.cmbPieza.getSelectedItem(),(proveedores) this.cmbProv.getSelectedItem(),Integer.parseInt(this.txtCantidad.getText().trim()))) {
+            if (new controlBodega().guardar((piezas) this.cmbPieza.getSelectedItem(),(proveedores) this.cmbProv.getSelectedItem(),Integer.parseInt(this.txtCantidad.getText().trim()),txtFecha.getText())) {
                 JOptionPane.showMessageDialog(this, "bodega guardada correctamente", "POO1", JOptionPane.INFORMATION_MESSAGE);
                 refresh();
             } else {
@@ -259,7 +361,112 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnModiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModiActionPerformed
         // TODO add your handling code here:
+         try {
+            if (new controlBodega().actualizar(
+                idBod,
+                (piezas)cmbPieza.getSelectedItem(), 
+                (proveedores)cmbProv.getSelectedItem(), 
+                Integer.parseInt(txtCantidad.getText().trim()))) {
+                JOptionPane.showMessageDialog(this, "Bodega modificada");
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "No se pudo modificar la bodega");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error.");
+        }
     }//GEN-LAST:event_btnModiActionPerformed
+
+    private void btnElimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElimActionPerformed
+        // TODO add your handling code here:
+        try {
+             int n = JOptionPane.showConfirmDialog(this, "¿Desea eliminar el registro?", "Bodega", JOptionPane.YES_NO_OPTION);
+             
+              if (n == JOptionPane.YES_OPTION) {
+            if ( new controlBodega().eliminar(idBod)) {
+                JOptionPane.showMessageDialog(this, "Registro eliminado");
+                refresh();
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el reggistro.");
+            }
+              }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al procesar", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnElimActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+            try
+        {
+            Connection myconn;
+            myconn=new conexion().getConn();
+            String jrxmlFileName = new File("src/main/java/com/sv/udb/reportes/ReporteGeneral.jrxml").getAbsolutePath();
+            String jasperFileName = new File("src/main/java/com/sv/udb/reportes/ReporteGeneral.jasper").getAbsolutePath();
+            String pdfFileName = new File("reportes/ReporteGeneral.pdf").getAbsolutePath();
+              //Compilando jasperreport
+            net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+            JasperPrint print = (JasperPrint)JasperFillManager.fillReport(jasperFileName, null,myconn);
+            
+            //guardando
+            JasperExportManager.exportReportToPdfFile(print, pdfFileName);
+             //mostrar en el jasperviewer
+             JasperViewer.viewReport(print, false);
+            //mostrando
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().open(new File(pdfFileName));
+                } catch (IOException ex) {
+                    System.out.println("No abrió :c " + ex);
+                }
+            }
+            
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex);
+        }
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+            
+            try
+        {
+            Map fechas= new HashMap();
+            fechas.clear();
+            fechas.put("fechaInicio", txtDesde.getText());
+            fechas.put("fechaFin", txtHasta.getText());
+            Connection myconn;
+            myconn=new conexion().getConn();
+            String jrxmlFileName = new File("src/main/java/com/sv/udb/reportes/ReporteFechas.jrxml").getAbsolutePath();
+            String jasperFileName = new File("src/main/java/com/sv/udb/reportes/ReporteFechas.jasper").getAbsolutePath();
+            String pdfFileName = new File("reportes/ReporteFechas.pdf").getAbsolutePath();
+              //Compilando jasperreport
+            net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+            JasperPrint print = (JasperPrint)JasperFillManager.fillReport(jasperFileName,fechas,myconn);
+            
+            //guardando
+            JasperExportManager.exportReportToPdfFile(print, pdfFileName);
+             //mostrar en el jasperviewer
+             JasperViewer.viewReport(print, false);
+            //mostrando
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().open(new File(pdfFileName));
+                } catch (IOException ex) {
+                    System.out.println("No abrió :c " + ex);
+                }
+            }
+            
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -302,14 +509,21 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton btnModi;
     private javax.swing.JComboBox<String> cmbPieza;
     private javax.swing.JComboBox<String> cmbProv;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblBod;
     private javax.swing.JTextField txtCantidad;
+    private javax.swing.JTextField txtDesde;
     private javax.swing.JTextField txtFecha;
+    private javax.swing.JTextField txtHasta;
     // End of variables declaration//GEN-END:variables
 }

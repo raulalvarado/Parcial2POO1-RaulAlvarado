@@ -28,15 +28,16 @@ public class controlBodega {
         this.conect = new conexion().getConn();
     }
     
-     public boolean guardar(piezas codigoPiez, proveedores codigoProv, int cant)
+     public boolean guardar(piezas codigoPiez, proveedores codigoProv, int cant, String fechaComp)
     {
         boolean resp= false;
         try
         {
-            PreparedStatement cmd = this.conect.prepareStatement("INSERT INTO bodega VALUES(NULL,?,?,?,'2018/04/04')");
+            PreparedStatement cmd = this.conect.prepareStatement("INSERT INTO bodega VALUES(NULL,?,?,?,?)");
             cmd.setInt(1, codigoPiez.getCodipiez());
             cmd.setInt(2, codigoProv.getCodiprov());
             cmd.setInt(3, cant);
+            cmd.setString(4,fechaComp);
             
             cmd.executeUpdate();
             resp=true;
@@ -66,42 +67,34 @@ public class controlBodega {
         return resp;
         }
     
-     public List<bodega> consTodo()
-    {
-       List<bodega> resp = new ArrayList<>();
-        try
-        {
-            PreparedStatement cmd = conect.prepareStatement("SELECT codi_bode, piezas.nomb_piez,proveedores.nomb_prov,cant,DATE_FORMAT(fech_comp,'%d/%m/%Y') FROM bodega INNER JOIN piezas ON bodega.codi_piez = piezas.codi_piez INNER JOIN proveedores ON bodega.codi_prov = proveedores.codi_prov");
+     public List<bodega> consTodo () {
+        List<bodega> resp = new ArrayList<>();
+        try {
+            PreparedStatement cmd = this.conect.prepareStatement("SELECT b.codi_bode, pie.*, pro.*, "
+                    + "b.cant, DATE_FORMAT(b.fecha_comp,'%d/%m/%Y')  FROM Bodega b INNER JOIN Piezas pie ON b.codi_piez = pie.codi_piez "
+                    + "INNER JOIN Proveedores pro ON b.codi_prov = pro.codi_prov");
             ResultSet rs = cmd.executeQuery();
-            while(rs.next())
-            {
-                resp.add(new bodega(
-                        rs.getInt(1),
-                        new piezas(rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)),
-                        new proveedores(rs.getInt(6), rs.getString(7), rs.getString(8), rs.getString(9)),
-                        rs.getInt(10),
-                        rs.getString(11))); // <----- Hay que llenar con los objetos
+            while (rs.next()) {
+                resp.add(
+                        new bodega(
+                                rs.getInt(1), 
+                                new piezas(rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5)),
+                                new proveedores(rs.getInt(6),rs.getString(7),rs.getString(8),rs.getString(9)),
+                                rs.getInt(10),
+                                rs.getString(11)
+                        ));
             }
-        }
-        catch(SQLException ex)
-        {
+        } catch (SQLException ex) {
             System.err.println("Error al consultar bodega: " + ex.getMessage());
-        }
-        finally
-        {
-            try
-            {
-                if(this.conect != null)
-                {
-                    if(!this.conect.isClosed())
-                    {
+        } finally {
+            try {
+                if (this.conect != null) {
+                    if (!this.conect.isClosed()) {
                         this.conect.close();
                     }
                 }
-            }
-            catch(SQLException ex)
-            {
-                System.err.println("Error al cerrar la conexión");
+            } catch (SQLException ex) {
+                System.err.println("Error al cerrar la conexión al consultar bodega: " + ex.getMessage());
             }
         }
         return resp;
@@ -116,7 +109,7 @@ public class controlBodega {
             cmd.setInt(1, codigoPiez.getCodipiez());
             cmd.setInt(1, codigoProv.getCodiprov());
             cmd.setInt(3, cant);
-            cmd.setInt(4, codigoBode);
+            cmd.setInt(5, codigoBode);
             cmd.executeUpdate();
             resp=true;
         
