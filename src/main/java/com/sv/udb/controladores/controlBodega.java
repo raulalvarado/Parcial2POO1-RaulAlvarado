@@ -107,9 +107,9 @@ public class controlBodega {
         {
             PreparedStatement cmd = this.conect.prepareStatement("UPDATE bodega SET codi_piez = ?, codi_prov = ?, cant=? WHERE codi_bode = ?");
             cmd.setInt(1, codigoPiez.getCodipiez());
-            cmd.setInt(1, codigoProv.getCodiprov());
+            cmd.setInt(2, codigoProv.getCodiprov());
             cmd.setInt(3, cant);
-            cmd.setInt(5, codigoBode);
+            cmd.setInt(4, codigoBode);
             cmd.executeUpdate();
             resp=true;
         

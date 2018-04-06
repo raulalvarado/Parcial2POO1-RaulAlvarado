@@ -65,6 +65,12 @@ public class bodega {
         this.date = date;
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(codibode);
+    }
+
+    
    
 
     

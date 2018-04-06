@@ -48,20 +48,9 @@ public class Principal extends javax.swing.JFrame {
     public Principal() {
         initComponents();
         refresh();
+        refreshPiezCmb();
+        refreshProvCmb();
         
-         DefaultComboBoxModel cmbModel = (DefaultComboBoxModel) cmbPieza.getModel();
-        cmbModel.removeAllElements();
-        
-        for (piezas piece : new controlPiezas().selectPiezas()) {
-            cmbModel.addElement(piece);
-        }
-        
-        cmbModel = (DefaultComboBoxModel) cmbProv.getModel();
-        cmbModel.removeAllElements();
-        
-        for (proveedores provider : new controlProveedores().selectProveedores()) {
-            cmbModel.addElement(provider);
-        }
     }
 
     /**
@@ -99,13 +88,13 @@ public class Principal extends javax.swing.JFrame {
 
         tblBod.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Pieza", "Proveedor", "Cantidad", "Fecha de compra"
+                "Id", "Pieza", "Proveedor", "Cantidad", "Fecha de compra"
             }
         ));
         tblBod.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -269,9 +258,9 @@ public class Principal extends javax.swing.JFrame {
                             .addComponent(btnInsertar)
                             .addComponent(btnModi)
                             .addComponent(btnElim))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -286,7 +275,7 @@ public class Principal extends javax.swing.JFrame {
                 model.removeRow(0);
             }
             for (bodega bd : new controlBodega().consTodo()) {
-                model.addRow(new Object[]{bd.getPieza(),bd.getProveedor(),bd.getCant(),bd.getDate()});
+                model.addRow(new Object[]{bd,bd.getPieza(),bd.getProveedor(),bd.getCant(),bd.getDate()});
             }
 
         } catch (Exception e) {
@@ -294,7 +283,7 @@ public class Principal extends javax.swing.JFrame {
         }
     }
     
-   /* private void refreshPiezCmb()
+    private void refreshPiezCmb()
     {
         try
         {
@@ -326,7 +315,7 @@ public class Principal extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(this, "Error al llenar ComboBox de piezas: " + e.getMessage());
         }
-    }*/
+    }
     private void tblBodMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBodMouseClicked
         // TODO add your handling code here:
         int row = tblBod.getSelectedRow();
@@ -368,6 +357,7 @@ public class Principal extends javax.swing.JFrame {
                 (proveedores)cmbProv.getSelectedItem(), 
                 Integer.parseInt(txtCantidad.getText().trim()))) {
                 JOptionPane.showMessageDialog(this, "Bodega modificada");
+                refresh();
             }
             else {
                 JOptionPane.showMessageDialog(this, "No se pudo modificar la bodega");
