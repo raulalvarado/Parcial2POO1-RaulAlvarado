@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -76,6 +79,13 @@ public class Principal extends javax.swing.JFrame {
         btnInsertar = new javax.swing.JButton();
         btnModi = new javax.swing.JButton();
         btnElim = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        btnReport1 = new javax.swing.JButton();
+        btnReport2 = new javax.swing.JButton();
+        txtFechaIni = new javax.swing.JTextField();
+        txtFechaFin = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -129,6 +139,64 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        btnReport1.setText("Reporte normal");
+        btnReport1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReport1ActionPerformed(evt);
+            }
+        });
+
+        btnReport2.setText("Reporte fechas");
+        btnReport2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReport2ActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Desde");
+
+        jLabel7.setText("Hasta");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel6)
+                        .addGap(14, 14, 14)
+                        .addComponent(txtFechaIni, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(73, 73, 73)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnReport1)
+                            .addComponent(btnReport2))))
+                .addContainerGap(26, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFechaIni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addGap(18, 18, 18)
+                .addComponent(btnReport2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnReport1)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -157,9 +225,10 @@ public class Principal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnModi)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnElim)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnElim))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(54, 54, 54)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -167,7 +236,9 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(79, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -190,13 +261,15 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnInsertar)
                             .addComponent(btnModi)
-                            .addComponent(btnElim))))
-                .addContainerGap(55, Short.MAX_VALUE))
+                            .addComponent(btnElim))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
     int idBod;
     private void refresh() {
         try {
@@ -317,6 +390,82 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnElimActionPerformed
 
+    private void btnReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReport1ActionPerformed
+        // TODO add your handling code here:
+         try
+        {
+            Connection myconn;
+            myconn=new conexion().getConn();
+            String jrxmlFileName = new File("src/main/java/com/sv/udb/reportes/reporteNomal.jrxml").getAbsolutePath();
+            String jasperFileName = new File("src/main/java/com/sv/udb/reportes/reporteNomal.jasper").getAbsolutePath();
+            String pdfFileName = new File("reportes/reporteNormal.pdf").getAbsolutePath();
+              //Compilando jasperreport
+            net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+            JasperPrint print = (JasperPrint)JasperFillManager.fillReport(jasperFileName, null,myconn);
+            
+            //guardando
+            JasperExportManager.exportReportToPdfFile(print, pdfFileName);
+             //mostrar en el jasperviewer
+             JasperViewer.viewReport(print, false);
+            //mostrando
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().open(new File(pdfFileName));
+                } catch (IOException ex) {
+                    System.out.println("No abrió :c " + ex);
+                }
+            }
+            
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex);
+        }
+    }//GEN-LAST:event_btnReport1ActionPerformed
+
+    private void btnReport2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReport2ActionPerformed
+        // TODO add your handling code here:
+        String fechaIni= this.txtFechaIni.getText().trim();
+        String fechaFin= this.txtFechaFin.getText().trim();
+        
+        try
+        {
+        java.util.Date fechaIniDt=(java.util.Date)format.parse(fechaIni);
+        java.util.Date fechaFinDt=(java.util.Date)format.parse(fechaFin);
+            
+            Map param= new HashMap();
+            param.put("fechaIni", fechaIniDt);
+            param.put("fechaFin",fechaFinDt);
+            Connection myconn;
+            myconn=new conexion().getConn();
+            String jrxmlFileName = new File("src/main/java/com/sv/udb/reportes/reporteFechas.jrxml").getAbsolutePath();
+            String jasperFileName = new File("src/main/java/com/sv/udb/reportes/reporteFechas.jasper").getAbsolutePath();
+            String pdfFileName = new File("reportes/reporteFechas.pdf").getAbsolutePath();
+              //Compilando jasperreport
+            net.sf.jasperreports.engine.JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+            JasperPrint print = (JasperPrint)JasperFillManager.fillReport(jasperFileName, param,myconn);
+            
+            //guardando
+            JasperExportManager.exportReportToPdfFile(print, pdfFileName);
+             //mostrar en el jasperviewer
+             JasperViewer.viewReport(print, false);
+            //mostrando
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().open(new File(pdfFileName));
+                } catch (IOException ex) {
+                    System.out.println("No abrió :c " + ex);
+                }
+            }
+            
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex);
+        }
+        
+    }//GEN-LAST:event_btnReport2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -356,6 +505,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton btnElim;
     private javax.swing.JButton btnInsertar;
     private javax.swing.JButton btnModi;
+    private javax.swing.JButton btnReport1;
+    private javax.swing.JButton btnReport2;
     private javax.swing.JComboBox<String> cmbPieza;
     private javax.swing.JComboBox<String> cmbProv;
     private javax.swing.JLabel jLabel1;
@@ -363,9 +514,14 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblBod;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtFecha;
+    private javax.swing.JTextField txtFechaFin;
+    private javax.swing.JTextField txtFechaIni;
     // End of variables declaration//GEN-END:variables
 }
